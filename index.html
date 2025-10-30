@@ -1,210 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ton21 Wallet — Mini App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T21 Wallet — Mini App</title>
+  <meta name="color-scheme" content="dark light" />
   <style>
-    body{background:radial-gradient(circle at center,#0d0d12 0%,#000 100%);color:#f8e49a;
-      font-family:"Segoe UI",Arial,sans-serif;text-align:center;margin:0;padding:0;overflow-x:hidden}
-    header{padding:40px 10px 16px}
-    header img{width:110px;height:110px;border-radius:50%;border:3px solid #f8e49a;
-      box-shadow:0 0 25px 8px rgba(255,215,100,.4);animation:pulse 3s infinite ease-in-out}
-    @keyframes pulse{0%{box-shadow:0 0 20px 4px rgba(255,215,100,.4)}
-      50%{box-shadow:0 0 40px 15px rgba(255,215,100,.7)}100%{box-shadow:0 0 20px 4px rgba(255,215,100,.4)}}
-    h1{font-size:26px;color:#ffdc73;margin:16px 0 6px;text-shadow:0 0 10px #f1c84b}
-    p.sub{color:#d6d6d6;font-size:15px;margin:0 24px 18px;line-height:1.4}
-
-    .card{background:rgba(255,255,255,.05);border:1px solid #f8e49a33;border-radius:14px;
-      padding:16px;margin:12px auto;max-width:420px}
-    .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-    input.addr{flex:1;min-width:240px;max-width:420px;background:#101018;color:#fff;border:1px solid #f8e49a33;
-      border-radius:10px;padding:12px 14px;font-size:14px;outline:none}
-    .btn{display:inline-block;background:linear-gradient(180deg,#f8e49a,#e4c55c);color:#0b0b0f;border:none;
-      border-radius:10px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
-    .btn:hover{transform:scale(1.03);box-shadow:0 0 18px rgba(255,230,120,.6)}
-    .btn.link{width:80%;max-width:320px;display:block;margin:10px auto}
-
-    .balances{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .tile{background:#0f121a;border:1px solid #f8e49a33;border-radius:10px;padding:12px}
-    .tile h4{margin:0 0 6px;font-size:13px;color:#cfcfcf}
-    .val{font-size:18px;font-weight:800;color:#ffea9f}
-
-    .lang{margin:18px 0 10px;font-size:14px;color:#aaa}
-    .lang button{background:none;border:1px solid #f8e49a;color:#f8e49a;margin:4px;border-radius:6px;
-      padding:4px 10px;cursor:pointer}
-    .muted{color:#a1a1a1;font-size:12px;margin-top:6px}
-    footer{margin:24px 0 26px;color:#777;font-size:13px}
-    .err{color:#ffb3b3;font-size:13px;margin-top:8px}
-    .ok{color:#9fffb3;font-size:13px;margin-top:8px}
+    :root {
+      --bg: #0b0b0f;
+      --panel: #13131a;
+      --gold: #f0d173;
+      --gold-2: #ffe794;
+      --text: #e9e9e9;
+      --muted: #9aa0a6;
+      --danger: #ff6b6b;
+      --ok: #27d980;
+      --btn-shadow: 0 6px 20px rgba(240,209,115,.15);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box }
+    body {
+      margin:0; background:var(--bg); color:var(--text);
+      font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 920px; margin: 22px auto 80px; padding: 0 14px; }
+    .hero { text-align:center; margin-bottom: 18px; }
+    .logo-wrap {
+      width:108px; height:108px; margin:10px auto 12px; border-radius:50%;
+      background: radial-gradient(60% 60% at 50% 50%, rgba(240,209,115,.35), rgba(0,0,0,0));
+      display:grid; place-items:center;
+    }
+    .logo {
+      width:92px; height:92px; border-radius:50%; border:2px solid var(--gold);
+      background:#000 center/cover no-repeat;
+      background-image:url("https://raw.githubusercontent.com/ton21-official/ton21-logo/main/t21_logo_gold.png");
+      box-shadow: 0 0 28px rgba(240,209,115,.35);
+    }
+    h1 {
+      margin:0 0 6px; font-weight:800; letter-spacing:.2px;
+      text-shadow: 0 0 24px rgba(240,209,115,.25);
+      color: var(--gold);
+      font-size: clamp(22px, 4.8vw, 30px);
+    }
+    .sub { color:#cfcfcf; font-size:15px; text-align:center; margin:0 8px 18px }
+    .card {
+      background:var(--panel); border:1px solid rgba(255,255,255,.06);
+      border-radius:var(--radius); padding:18px; margin: 0 auto 16px; max-width:780px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+    .input {
+      flex:1 1 520px; background:#0e0e14; color:var(--text);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 14px; border-radius: 10px; outline:none;
+      font-size:15px;
+    }
+    .input::placeholder{ color:#7d8590 }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      background:var(--gold); color:#0b0b0f; border:0; border-radius:10px;
+      padding:12px 16px; font-weight:700; cursor:pointer;
+      box-shadow: var(--btn-shadow); transition:.2s transform,.2s background;
+      min-width:132px;
+    }
+    .btn:hover { background:var(--gold-2); transform: translateY(-1px) }
+    .pill { background:#0e0e14; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px 12px; }
+    .stat {
+      display:flex; gap:10px; justify-content:space-between; text-align:center;
+      background:#0e0e14; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:12px 14px; margin-top:12px;
+    }
+    .stat > div { flex:1 }
+    .label { color:var(--muted); font-size:12px; letter-spacing:.3px }
+    .value { font-size:20px; font-weight:800; margin-top:6px }
+    .ok { color: var(--ok) }
+    .err { color: var(--danger) }
+    .grid { display:grid; gap:12px; grid-template-columns: 1fr }
+    @media (min-width:680px){ .grid { grid-template-columns: 1fr 1fr } }
+    .cta .btn { width:100% }
+    .langbar{ display:flex; gap:10px; align-items:center; justify-content:center; margin-top:14px; color:#aab0b8; }
+    .langbar button{
+      border:1px solid var(--gold); color:var(--gold); background:transparent;
+      padding:6px 10px; border-radius:8px; cursor:pointer; min-width:44px; font-weight:700
+    }
+    footer { text-align:center; color:#7f8691; margin-top:18px; font-size:13px }
+    .hint { font-size:12px; color:#a2a8b3; margin-top:8px; text-align:center }
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://raw.githubusercontent.com/ton21-official/ton21_official/main/logo.png" alt="Ton21 Logo"/>
-    <h1 id="t_title">✨ Welcome to Ton21 Wallet ✨</h1>
-    <p class="sub" id="t_desc">💎 Your decentralized gateway to the Ton21 ecosystem.</p>
-  </header>
-
-  <!-- Address & Actions -->
-  <div class="card">
-    <div class="row">
-      <input id="addr" class="addr" placeholder="UQ... / EQ..." />
-      <button class="btn" id="btn_save">💾 Save</button>
-      <button class="btn" id="btn_refresh">🔄 Refresh</button>
+  <div class="wrap">
+    <div class="hero">
+      <div class="logo-wrap"><div class="logo"></div></div>
+      <h1 id="t-title">✨ Welcome to T21 Wallet ✨</h1>
+      <p class="sub" id="t-sub">💎 Your decentralized gateway to the Ton21 ecosystem.</p>
     </div>
-    <div class="muted" id="hint">Paste your Tonkeeper address (starts with UQ or EQ)</div>
-    <div id="msg"></div>
 
-    <div class="balances">
-      <div class="tile">
-        <h4>TON</h4>
-        <div class="val" id="ton_val">—</div>
+    <div class="card">
+      <div class="row" style="margin-bottom:10px">
+        <input id="addr" class="input" placeholder="Paste Tonkeeper address (starts with UQ or EQ)" />
+        <button id="save" class="btn">💾 <span id="t-save">Save</span></button>
       </div>
-      <div class="tile">
-        <h4>T21</h4>
-        <div class="val" id="t21_val">—</div>
+
+      <div class="row" style="margin-bottom:8px">
+        <button id="refresh" class="btn">🔄 <span id="t-refresh">Refresh</span></button>
+        <div id="status" class="pill" style="flex:1; text-align:center;"></div>
+      </div>
+
+      <div class="stat">
+        <div>
+          <div class="label">TON</div>
+          <div id="ton" class="value">—</div>
+        </div>
+        <div>
+          <div class="label">T21</div>
+          <div id="t21" class="value">—</div>
+        </div>
+      </div>
+
+      <div class="hint" id="t-hint">Enter Tonkeeper address (starts with UQ or EQ)</div>
+    </div>
+
+    <div class="card cta">
+      <div class="grid" style="margin-bottom:8px">
+        <a class="btn" id="buyBtn">💰 <span id="t-buy">Buy $T21</span></a>
+        <a class="btn" id="swapBtn">🔁 <span id="t-swap">Swap / Exchange</span></a>
+      </div>
+      <div class="grid">
+        <a class="btn" id="portalBtn">🌐 <span id="t-portal">Ton21 Portal</span></a>
+        <a class="btn" id="assistantBtn">🪙 <span id="t-assistant">Buy Assistant</span></a>
+      </div>
+      <div class="langbar">
+        🌐 <span id="t-language">Language:</span>
+        <button data-lang="ru">RU</button>
+        <button data-lang="en">GB</button>
+        <button data-lang="zh">CN</button>
+        <button data-lang="hi">IN</button>
       </div>
     </div>
-  </div>
 
-  <!-- Links -->
-  <div class="card">
-    <button class="btn link" onclick="openLink('https://dedust.io/swap/TON/T21')" id="b1">💰 Buy $T21</button>
-    <button class="btn link" onclick="openLink('https://dedust.io/swap/T21/TON')" id="b2">🔁 Swap Tokens</button>
-    <button class="btn link" onclick="openLink('https://t.me/Ton21PortalBot')" id="b5">🌐 Ton21 Portal</button>
-    <button class="btn link" onclick="openLink('https://t.me/T21BuyBot')" id="b4">🪙 Buy Assistant</button>
+    <footer>© 2025 Ton21 Project — All rights reserved</footer>
   </div>
-
-  <!-- Language -->
-  <div class="lang">
-    🌐 Language:
-    <button onclick="setLang('ru')">🇷🇺</button>
-    <button onclick="setLang('en')">🇬🇧</button>
-    <button onclick="setLang('zh')">🇨🇳</button>
-    <button onclick="setLang('hi')">🇮🇳</button>
-  </div>
-
-  <footer>© 2025 Ton21 Project — All rights reserved</footer>
 
   <script>
-    // ========= CONFIG =========
-    const TONCENTER_URL = "https://toncenter.com/api/v2/";
-    const TONCENTER_KEY = "7b7dbe074f508388d81130af3a79b5a2cf955084f3e3b088aa7ecba4419c2317";
-    const T21_MASTER    = "EQBLgiPMly982IMGqauqdX0Fe_N01arD-LhlKSfxBd8rzYRG";
+    // ─────────────────────────────────────────────────────────────────────────
+    // 0) Telegram Mini App init + helpers
+    // ─────────────────────────────────────────────────────────────────────────
+    (function initWA(){
+      try {
+        if (window.Telegram && Telegram.WebApp) {
+          Telegram.WebApp.ready();
+          Telegram.WebApp.expand();
+        }
+      } catch(e){}
+    })();
 
-    // If CORS упрётся, укажи адрес своего лёгкого прокси (оставь "" для прямых запросов):
-    // пример proxy: https://your-render-app.onrender.com/toncenter?path=...&params=...
-    const proxyUrl = ""; // либо "" для прямых запросов
+    function openLink(url){
+      try{
+        if (window.Telegram && Telegram.WebApp) return Telegram.WebApp.openLink(url);
+      }catch(e){}
+      window.open(url, "_blank");
+    }
 
-    // ========= I18N =========
-    const T = {
-      en:{title:"✨ Welcome to Ton21 Wallet ✨", desc:"💎 Your decentralized gateway to the Ton21 ecosystem.",
-        hint:"Paste your Tonkeeper address (starts with UQ or EQ)",
-        saved:"✅ Address saved", invalid:"⚠️ Invalid address", errFetch:"⚠️ Error: ", okUpdated:"✅ Updated",
-        b1:"💰 Buy $T21", b2:"🔁 Swap Tokens", b4:"🪙 Buy Assistant", b5:"🌐 Ton21 Portal"},
-      ru:{title:"✨ Добро пожаловать в Ton21 Кошелёк ✨", desc:"💎 Твой децентрализованный портал в экосистему Ton21.",
+    // ─────────────────────────────────────────────────────────────────────────
+    // 1) Settings
+    // ─────────────────────────────────────────────────────────────────────────
+    const T21_MASTER = "EQBLgiPMly982IMGqauqdX0Fe_N01arD-LhlKSfxBd8rzYRG";
+    // Вставь свой ключ (опционально). Можно оставить пустым — будет паблик доступ.
+    const TONCENTER_KEY = "6c157ea65ec504b0aa2d83c2f68efe872f796755bf1445b1e5168da2e452b83a".trim();
+
+    const LINKS = {
+      BUY:   "https://dedust.io/swap/TON/T21",
+      SWAP:  "https://dedust.io/swap/T21/TON",
+      PORTAL:"https://t.me/Ton21PortalBot",
+      ASSIST:"https://t.me/T21BuyBot"
+    };
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 2) i18n
+    // ─────────────────────────────────────────────────────────────────────────
+    const I18N = {
+      en: {
+        title:"✨ Welcome to T21 Wallet ✨",
+        sub:"💎 Your decentralized gateway to the Ton21 ecosystem.",
+        save:"Save", refresh:"Refresh",
+        hint:"Enter Tonkeeper address (starts with UQ or EQ)",
+        buy:"Buy $T21", swap:"Swap / Exchange", portal:"Ton21 Portal", assistant:"Buy Assistant",
+        language:"Language:",
+        savedOk:"✅ Address saved", wrong:"⚠️ Invalid address",
+        loading:"⏳ Loading…", netbusy:"⚠️ Network is busy, try again later",
+        noaddr:"⚠️ Add address first"
+      },
+      ru: {
+        title:"✨ Добро пожаловать в T21 Кошелёк ✨",
+        sub:"💎 Твой децентрализованный портал в экосистему Ton21.",
+        save:"Сохранить", refresh:"Обновить",
         hint:"Вставь Tonkeeper-адрес (начинается с UQ или EQ)",
-        saved:"✅ Адрес сохранён", invalid:"⚠️ Некорректный адрес", errFetch:"⚠️ Ошибка: ", okUpdated:"✅ Обновлено",
-        b1:"💰 Купить $T21", b2:"🔁 Обмен / Swap", b4:"🪙 Помощник покупки", b5:"🌐 Портал Ton21"},
-      zh:{title:"✨ 欢迎来到 Ton21 钱包 ✨", desc:"💎 进入 Ton21 生态系统的去中心化门户。",
+        buy:"Купить $T21", swap:"Обмен / Swap", portal:"Портал Ton21", assistant:"Помощник покупки",
+        language:"Язык:",
+        savedOk:"✅ Адрес сохранён", wrong:"⚠️ Некорректный адрес",
+        loading:"⏳ Загрузка…", netbusy:"⚠️ Сеть перегружена, попробуйте позже",
+        noaddr:"⚠️ Сначала добавьте адрес"
+      },
+      zh: {
+        title:"✨ 欢迎使用 T21 钱包 ✨",
+        sub:"💎 进入 Ton21 生态系统的去中心化门户。",
+        save:"保存", refresh:"刷新",
         hint:"粘贴 Tonkeeper 地址（以 UQ 或 EQ 开头）",
-        saved:"✅ 地址已保存", invalid:"⚠️ 地址无效", errFetch:"⚠️ 错误：", okUpdated:"✅ 已更新",
-        b1:"💰 购买 $T21", b2:"🔁 代币交换", b4:"🪙 购买助手", b5:"🌐 Ton21 门户"},
-      hi:{title:"✨ Ton21 वॉलेट में आपका स्वागत है ✨", desc:"💎 Ton21 पारिस्थितिकी तंत्र का आपका विकेंद्रीकृत प्रवेश द्वार।",
-        hint:"Tonkeeper पता पेस्ट करें (UQ या EQ से शुरू होता है)",
-        saved:"✅ पता सहेजा गया", invalid:"⚠️ अमान्य पता", errFetch:"⚠️ त्रुटि: ", okUpdated:"✅ अपडेट किया गया",
-        b1:"💰 $T21 खरीदें", b2:"🔁 टोकन स्वैप करें", b4:"🪙 खरीद सहायक", b5:"🌐 Ton21 पोर्टल"}
+        buy:"购买 $T21", swap:"代币交换", portal:"Ton21 门户", assistant:"购买助手",
+        language:"语言：",
+        savedOk:"✅ 地址已保存", wrong:"⚠️ 地址无效",
+        loading:"⏳ 载入中…", netbusy:"⚠️ 网络繁忙，请稍后重试",
+        noaddr:"⚠️ 请先添加地址"
+      },
+      hi: {
+        title:"✨ T21 वॉलेट में आपका स्वागत है ✨",
+        sub:"💎 Ton21 पारिस्थितिकी तंत्र का आपका विकेंद्रीकृत प्रवेश द्वार।",
+        save:"सहेजें", refresh:"रीफ़्रेश",
+        hint:"Tonkeeper पता दर्ज करें (UQ या EQ से शुरू)",
+        buy:"$T21 खरीदें", swap:"टोकन स्वैप", portal:"Ton21 पोर्टल", assistant:"खरीद सहायक",
+        language:"भाषा:",
+        savedOk:"✅ पता सहेजा गया", wrong:"⚠️ अमान्य पता",
+        loading:"⏳ लोड हो रहा है…", netbusy:"⚠️ नेटवर्क व्यस्त है, बाद में प्रयास करें",
+        noaddr:"⚠️ पहले पता जोड़ें"
+      }
+    };
+    const els = {
+      title:    document.getElementById("t-title"),
+      sub:      document.getElementById("t-sub"),
+      save:     document.getElementById("t-save"),
+      refresh:  document.getElementById("t-refresh"),
+      hint:     document.getElementById("t-hint"),
+      buy:      document.getElementById("t-buy"),
+      swap:     document.getElementById("t-swap"),
+      portal:   document.getElementById("t-portal"),
+      assist:   document.getElementById("t-assistant"),
+      langlab:  document.getElementById("t-language"),
+      addr:     document.getElementById("addr"),
+      status:   document.getElementById("status"),
+      ton:      document.getElementById("ton"),
+      t21:      document.getElementById("t21"),
+      saveBtn:  document.getElementById("save"),
+      refreshBtn: document.getElementById("refresh"),
+      buyBtn:   document.getElementById("buyBtn"),
+      swapBtn:  document.getElementById("swapBtn"),
+      portalBtn:document.getElementById("portalBtn"),
+      assistantBtn:document.getElementById("assistantBtn"),
     };
 
     function setLang(lang){
-      const t=T[lang]||T.en;
-      document.getElementById("t_title").innerText=t.title;
-      document.getElementById("t_desc").innerText=t.desc;
-      document.getElementById("hint").innerText=t.hint;
-      document.getElementById("b1").innerText=t.b1;
-      document.getElementById("b2").innerText=t.b2;
-      document.getElementById("b4").innerText=t.b4;
-      document.getElementById("b5").innerText=t.b5;
-      localStorage.setItem("t21_lang",lang);
+      const t = I18N[lang] || I18N.en;
+      els.title.textContent = t.title;
+      els.sub.textContent = t.sub;
+      els.save.textContent = t.save;
+      els.refresh.textContent = t.refresh;
+      els.hint.textContent = t.hint;
+      els.buy.textContent = t.buy;
+      els.swap.textContent = t.swap;
+      els.portal.textContent = t.portal;
+      els.assist.textContent = t.assistant;
+      els.langlab.textContent = t.language;
+      localStorage.setItem("t21_lang", lang);
+    }
+    document.querySelectorAll(".langbar button").forEach(b=>{
+      b.addEventListener("click", ()=> setLang(b.dataset.lang));
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 3) Links
+    // ─────────────────────────────────────────────────────────────────────────
+    els.buyBtn.onclick      = ()=> openLink(LINKS.BUY);
+    els.swapBtn.onclick     = ()=> openLink(LINKS.SWAP);
+    els.portalBtn.onclick   = ()=> openLink(LINKS.PORTAL);
+    els.assistantBtn.onclick= ()=> openLink(LINKS.ASSIST);
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 4) Balances (Toncenter → alt Toncenter → TON API)
+    // ─────────────────────────────────────────────────────────────────────────
+    async function httpGet(url){
+      const res = await fetch(url, {method:"GET"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      return res.json();
     }
 
-    // ========= Helpers =========
-    function openLink(url){
-      if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.openLink(url);} else {window.open(url,"_blank");}
-    }
-    const $ = id => document.getElementById(id);
-    function validAddr(a){ return (a||"").trim().match(/^(UQ|EQ)[A-Za-z0-9\-_]{30,}$/); }
+    function fmtTON(n){ return Number(n).toLocaleString(undefined,{maximumFractionDigits:4}) }
+    function fmtT21(n){ return Number(n).toLocaleString(undefined,{maximumFractionDigits:2}) }
 
-    async function tcGet(path, params={}){
-      const p = new URLSearchParams({...params, api_key: TONCENTER_KEY}).toString();
-      if(proxyUrl){
-        // через прокси
-        const u = `${proxyUrl}&path=${encodeURIComponent(path)}&${p}`;
-        const r = await fetch(u);
-        return r.json();
-      }else{
-        // прямой вызов
-        const u = `${TONCENTER_URL}${path}?${p}`;
-        const r = await fetch(u);
-        return r.json();
+    async function toncenterBalance(addr){
+      const base = "https://toncenter.com/api/v2";
+      const keyQ = TONCENTER_KEY ? `&api_key=${encodeURIComponent(TONCENTER_KEY)}` : "";
+      const a = await httpGet(`${base}/getAddressBalance?address=${addr}${keyQ}`);
+      const ton = (a.result? Number(a.result)/1e9 : 0);
+
+      // Jetton (T21)
+      let t21 = 0;
+      try{
+        const j = await httpGet(`${base}/get_jetton_wallet_info?address=${addr}&jetton_master=${T21_MASTER}${keyQ}`);
+        if (j.result && j.result.balance) t21 = Number(j.result.balance)/1e9;
+      }catch(e){ /* not created → 0 */ }
+
+      return {ton, t21};
+    }
+
+    async function toncenterAlt(addr){
+      // зеркальный хост (на случай перегрузки основного)
+      const base = "https://toncenter.com/api/v2"; // можно заменить на свой зеркальный узел
+      const keyQ = TONCENTER_KEY ? `&api_key=${encodeURIComponent(TONCENTER_KEY)}` : "";
+      const a = await httpGet(`${base}/getAddressBalance?address=${addr}${keyQ}`);
+      const ton = (a.result? Number(a.result)/1e9 : 0);
+
+      let t21 = 0;
+      try{
+        const j = await httpGet(`${base}/get_jetton_wallet_info?address=${addr}&jetton_master=${T21_MASTER}${keyQ}`);
+        if (j.result && j.result.balance) t21 = Number(j.result.balance)/1e9;
+      }catch(e){}
+      return {ton, t21};
+    }
+
+    async function tonapiBalance(addr){
+      // публичный TON API
+      const a = await httpGet(`https://tonapi.io/v2/accounts/${addr}`);
+      const ton = a.balance? Number(a.balance)/1e9 : 0;
+
+      let t21 = 0;
+      try{
+        const j = await httpGet(`https://tonapi.io/v2/accounts/${addr}/jettons`);
+        if (Array.isArray(j.balances)) {
+          const hit = j.balances.find(b => (b.jetton && (b.jetton.address===T21_MASTER)));
+          if (hit) {
+            // у них баланс может быть строкой в наноджеттонах:
+            const raw = hit.balance ?? 0;
+            t21 = Number(raw)/1e9;
+          }
+        }
+      }catch(e){}
+      return {ton, t21};
+    }
+
+    async function loadBalances(addr){
+      const lang = localStorage.getItem("t21_lang") || "ru";
+      const T = I18N[lang] || I18N.en;
+      els.status.textContent = T.loading;
+      els.status.style.color = "";
+
+      try {
+        // 1) основной toncenter
+        return await toncenterBalance(addr);
+      } catch (e1) {
+        try {
+          // 2) альтернативный (можно заменить на свой прокси/нод)
+          return await toncenterAlt(addr);
+        } catch (e2) {
+          // 3) тон-апи
+          try{
+            return await tonapiBalance(addr);
+          }catch(e3){
+            throw e3;
+          }
+        }
       }
-    }
-
-    async function getTonBalance(address){
-      const j = await tcGet("getAddressBalance",{address});
-      if(!("result" in j)) throw new Error(j.error||"no result");
-      return Number(j.result)/1e9;
-    }
-
-    async function getT21Balance(address){
-      // спрашиваем jetton_wallet_info по master контракту T21
-      const j = await tcGet("get_jetton_wallet_info",{address, jetton_master:T21_MASTER});
-      const res = j.result || {};
-      if("balance" in res){ return Number(res.balance)/1e9; }
-      return 0.0; // если кошелёк jetton не развёрнут
     }
 
     async function refresh(){
-      const addr = $("addr").value.trim();
-      const msg = $("msg");
-      msg.className = ""; msg.textContent = "";
-      if(!validAddr(addr)){ msg.className="err"; msg.textContent=T[currentLang].invalid; return; }
+      const lang = localStorage.getItem("t21_lang") || "ru";
+      const T = I18N[lang] || I18N.en;
+      const addr = (els.addr.value||"").trim();
 
-      $("ton_val").textContent = "…";
-      $("t21_val").textContent = "…";
+      if (!/^(UQ|EQ)/.test(addr) || addr.length < 36){
+        els.status.textContent = T.wrong;
+        els.status.className = "pill err";
+        return;
+      }
+
+      els.status.textContent = T.loading;
+      els.status.className = "pill";
 
       try{
-        const [ton,t21] = await Promise.all([getTonBalance(addr), getT21Balance(addr)]);
-        $("ton_val").textContent = ton.toFixed(4);
-        $("t21_val").textContent = t21.toFixed(2);
-        msg.className="ok"; msg.textContent=T[currentLang].okUpdated;
-        localStorage.setItem("t21_addr", addr);
-      }catch(e){
-        $("ton_val").textContent = "—";
-        $("t21_val").textContent = "—";
-        msg.className="err"; msg.textContent = T[currentLang].errFetch + (e.message||e);
+        const {ton, t21} = await loadBalances(addr);
+        els.ton.textContent = fmtTON(ton);
+        els.t21.textContent = fmtT21(t21);
+        els.status.textContent = "✅ OK";
+        els.status.className = "pill ok";
+      }catch(err){
+        els.status.textContent = T.netbusy;
+        els.status.className = "pill err";
+        els.ton.textContent = "—";
+        els.t21.textContent = "—";
       }
     }
 
-    // ========= Init =========
-    let currentLang = localStorage.getItem("t21_lang") || (navigator.language||"en").slice(0,2);
-    if(!T[currentLang]) currentLang="en";
-    setLang(currentLang);
+    // ─────────────────────────────────────────────────────────────────────────
+    // 5) Save / Restore / Events
+    // ─────────────────────────────────────────────────────────────────────────
+    function saveAddr(){
+      const lang = localStorage.getItem("t21_lang") || "ru";
+      const T = I18N[lang] || I18N.en;
+      const a = (els.addr.value||"").trim();
+      if (!/^(UQ|EQ)/.test(a) || a.length < 36){
+        els.status.textContent = T.wrong;
+        els.status.className = "pill err";
+        return;
+      }
+      localStorage.setItem("t21_addr", a);
+      els.status.textContent = T.savedOk;
+      els.status.className = "pill ok";
+    }
 
-    const saved = localStorage.getItem("t21_addr");
-    if(saved){ $("addr").value = saved; }
+    els.saveBtn.addEventListener("click", saveAddr);
+    els.refreshBtn.addEventListener("click", refresh);
+    els.addr.addEventListener("keydown", (e)=>{ if(e.key==="Enter") saveAddr() });
 
-    $("btn_save").onclick = ()=>{
-      const v = $("addr").value.trim();
-      if(!validAddr(v)){ $("msg").className="err"; $("msg").textContent=T[currentLang].invalid; return; }
-      localStorage.setItem("t21_addr", v);
-      $("msg").className="ok"; $("msg").textContent=T[currentLang].saved;
-    };
-    $("btn_refresh").onclick = refresh;
+    // ─────────────────────────────────────────────────────────────────────────
+    // 6) Boot
+    // ─────────────────────────────────────────────────────────────────────────
+    (function boot(){
+      const lang = localStorage.getItem("t21_lang") || "ru";
+      setLang(lang);
 
-    // Авто-обновление при наличии адреса
-    if(saved){ refresh(); }
+      const a = localStorage.getItem("t21_addr");
+      if (a) els.addr.value = a;
+
+      // Авто-обновление при наличии адреса
+      if (a) refresh();
+      
+      // кнопки — это ссылки, но открываем через Telegram
+      document.querySelectorAll("a.btn").forEach(a=>{
+        const id = a.id;
+        a.href = "javascript:void(0)";
+      });
+    })();
   </script>
 </body>
 </html>
