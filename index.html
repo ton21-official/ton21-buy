@@ -1,122 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ton21 Wallet — Mini App</title>
   <style>
-    body {
-      background: radial-gradient(circle at center, #0d0d12 0%, #000000 100%);
-      color: #f8e49a;
-      font-family: "Segoe UI", Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
+    body{background:radial-gradient(circle at center,#0d0d12 0%,#000 100%);color:#f8e49a;
+      font-family:"Segoe UI",Arial,sans-serif;text-align:center;margin:0;padding:0;overflow-x:hidden}
+    header{padding:40px 10px 16px}
+    header img{width:110px;height:110px;border-radius:50%;border:3px solid #f8e49a;
+      box-shadow:0 0 25px 8px rgba(255,215,100,.4);animation:pulse 3s infinite ease-in-out}
+    @keyframes pulse{0%{box-shadow:0 0 20px 4px rgba(255,215,100,.4)}
+      50%{box-shadow:0 0 40px 15px rgba(255,215,100,.7)}100%{box-shadow:0 0 20px 4px rgba(255,215,100,.4)}}
+    h1{font-size:26px;color:#ffdc73;margin:16px 0 6px;text-shadow:0 0 10px #f1c84b}
+    p.sub{color:#d6d6d6;font-size:15px;margin:0 24px 18px;line-height:1.4}
 
-    header {
-      padding: 40px 10px 20px;
-      position: relative;
-    }
+    .card{background:rgba(255,255,255,.05);border:1px solid #f8e49a33;border-radius:14px;
+      padding:16px;margin:12px auto;max-width:420px}
+    .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    input.addr{flex:1;min-width:240px;max-width:420px;background:#101018;color:#fff;border:1px solid #f8e49a33;
+      border-radius:10px;padding:12px 14px;font-size:14px;outline:none}
+    .btn{display:inline-block;background:linear-gradient(180deg,#f8e49a,#e4c55c);color:#0b0b0f;border:none;
+      border-radius:10px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
+    .btn:hover{transform:scale(1.03);box-shadow:0 0 18px rgba(255,230,120,.6)}
+    .btn.link{width:80%;max-width:320px;display:block;margin:10px auto}
 
-    header img {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      border: 3px solid #f8e49a;
-      box-shadow: 0 0 25px 8px rgba(255, 215, 100, 0.4);
-      animation: pulse 3s infinite ease-in-out;
-    }
+    .balances{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .tile{background:#0f121a;border:1px solid #f8e49a33;border-radius:10px;padding:12px}
+    .tile h4{margin:0 0 6px;font-size:13px;color:#cfcfcf}
+    .val{font-size:18px;font-weight:800;color:#ffea9f}
 
-    @keyframes pulse {
-      0% { box-shadow: 0 0 20px 4px rgba(255, 215, 100, 0.4); }
-      50% { box-shadow: 0 0 40px 15px rgba(255, 215, 100, 0.7); }
-      100% { box-shadow: 0 0 20px 4px rgba(255, 215, 100, 0.4); }
-    }
-
-    h1 {
-      font-size: 26px;
-      color: #ffdc73;
-      margin-top: 18px;
-      text-shadow: 0 0 10px #f1c84b;
-    }
-
-    p {
-      color: #d6d6d6;
-      font-size: 15px;
-      margin: 12px 25px 25px;
-      line-height: 1.4;
-    }
-
-    .btn {
-      display: block;
-      margin: 12px auto;
-      width: 80%;
-      max-width: 310px;
-      background: linear-gradient(180deg, #f8e49a, #e4c55c);
-      color: #0b0b0f;
-      border: none;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.25s;
-      box-shadow: 0 0 10px rgba(255, 220, 100, 0.4);
-    }
-
-    .btn:hover {
-      background: linear-gradient(180deg, #ffe68d, #f1d060);
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(255, 230, 120, 0.7);
-    }
-
-    .lang {
-      margin-top: 35px;
-      font-size: 14px;
-      color: #aaa;
-    }
-
-    .lang button {
-      background: none;
-      border: 1px solid #f8e49a;
-      color: #f8e49a;
-      margin: 5px;
-      border-radius: 6px;
-      padding: 4px 10px;
-      cursor: pointer;
-      font-size: 15px;
-      transition: 0.2s;
-    }
-
-    .lang button:hover {
-      background-color: #f8e49a;
-      color: #000;
-    }
-
-    footer {
-      margin-top: 35px;
-      font-size: 13px;
-      color: #777;
-    }
+    .lang{margin:18px 0 10px;font-size:14px;color:#aaa}
+    .lang button{background:none;border:1px solid #f8e49a;color:#f8e49a;margin:4px;border-radius:6px;
+      padding:4px 10px;cursor:pointer}
+    .muted{color:#a1a1a1;font-size:12px;margin-top:6px}
+    footer{margin:24px 0 26px;color:#777;font-size:13px}
+    .err{color:#ffb3b3;font-size:13px;margin-top:8px}
+    .ok{color:#9fffb3;font-size:13px;margin-top:8px}
   </style>
 </head>
 <body>
   <header>
-    <img src="https://raw.githubusercontent.com/ton21-official/ton21_official/main/logo.png" alt="Ton21 Logo" />
-    <h1>✨ Welcome to Ton21 Wallet ✨</h1>
-    <p>💎 Your decentralized gateway to the Ton21 ecosystem.</p>
+    <img src="https://raw.githubusercontent.com/ton21-official/ton21_official/main/logo.png" alt="Ton21 Logo"/>
+    <h1 id="t_title">✨ Welcome to Ton21 Wallet ✨</h1>
+    <p class="sub" id="t_desc">💎 Your decentralized gateway to the Ton21 ecosystem.</p>
   </header>
 
-  <main>
-    <button class="btn" onclick="openLink('https://dedust.io/swap/TON/T21')">💰 Buy $T21</button>
-    <button class="btn" onclick="openLink('https://dedust.io/swap/T21/TON')">🔁 Swap Tokens</button>
-    <button class="btn" onclick="openLink('https://t.me/T21WalletBot')">💎 Wallet Balance</button>
-    <button class="btn" onclick="openLink('https://t.me/T21BuyBot')">🪙 Buy Assistant</button>
-    <button class="btn" onclick="openLink('https://t.me/Ton21PortalBot')">🌐 Ton21 Portal</button>
-  </main>
+  <!-- Address & Actions -->
+  <div class="card">
+    <div class="row">
+      <input id="addr" class="addr" placeholder="UQ... / EQ..." />
+      <button class="btn" id="btn_save">💾 Save</button>
+      <button class="btn" id="btn_refresh">🔄 Refresh</button>
+    </div>
+    <div class="muted" id="hint">Paste your Tonkeeper address (starts with UQ or EQ)</div>
+    <div id="msg"></div>
 
+    <div class="balances">
+      <div class="tile">
+        <h4>TON</h4>
+        <div class="val" id="ton_val">—</div>
+      </div>
+      <div class="tile">
+        <h4>T21</h4>
+        <div class="val" id="t21_val">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <div class="card">
+    <button class="btn link" onclick="openLink('https://dedust.io/swap/TON/T21')" id="b1">💰 Buy $T21</button>
+    <button class="btn link" onclick="openLink('https://dedust.io/swap/T21/TON')" id="b2">🔁 Swap Tokens</button>
+    <button class="btn link" onclick="openLink('https://t.me/Ton21PortalBot')" id="b5">🌐 Ton21 Portal</button>
+    <button class="btn link" onclick="openLink('https://t.me/T21BuyBot')" id="b4">🪙 Buy Assistant</button>
+  </div>
+
+  <!-- Language -->
   <div class="lang">
     🌐 Language:
     <button onclick="setLang('ru')">🇷🇺</button>
@@ -125,69 +85,126 @@
     <button onclick="setLang('hi')">🇮🇳</button>
   </div>
 
-  <footer>
-    © 2025 Ton21 Project — All rights reserved
-  </footer>
+  <footer>© 2025 Ton21 Project — All rights reserved</footer>
 
   <script>
-    function openLink(url) {
-      if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.openLink(url);
-      } else {
-        window.open(url, "_blank");
-      }
-    }
+    // ========= CONFIG =========
+    const TONCENTER_URL = "https://toncenter.com/api/v2/";
+    const TONCENTER_KEY = "7b7dbe074f508388d81130af3a79b5a2cf955084f3e3b088aa7ecba4419c2317";
+    const T21_MASTER    = "EQBLgiPMly982IMGqauqdX0Fe_N01arD-LhlKSfxBd8rzYRG";
 
-    const translations = {
-      ru: {
-        title: "✨ Добро пожаловать в Ton21 Кошелёк ✨",
-        desc: "💎 Твой децентрализованный портал в экосистему Ton21.",
-        btn1: "💰 Купить $T21",
-        btn2: "🔁 Обмен / Swap",
-        btn3: "💎 Баланс кошелька",
-        btn4: "🪙 Помощник покупки",
-        btn5: "🌐 Портал Ton21"
-      },
-      zh: {
-        title: "✨ 欢迎来到 Ton21 钱包 ✨",
-        desc: "💎 进入 Ton21 生态系统的去中心化门户。",
-        btn1: "💰 购买 $T21",
-        btn2: "🔁 代币交换",
-        btn3: "💎 钱包余额",
-        btn4: "🪙 购买助手",
-        btn5: "🌐 Ton21 门户"
-      },
-      hi: {
-        title: "✨ Ton21 वॉलेट में आपका स्वागत है ✨",
-        desc: "💎 Ton21 पारिस्थितिकी तंत्र का आपका विकेंद्रीकृत प्रवेश द्वार।",
-        btn1: "💰 $T21 खरीदें",
-        btn2: "🔁 टोकन स्वैप करें",
-        btn3: "💎 वॉलेट बैलेंस",
-        btn4: "🪙 खरीद सहायक",
-        btn5: "🌐 Ton21 पोर्टल"
-      },
-      en: {
-        title: "✨ Welcome to Ton21 Wallet ✨",
-        desc: "💎 Your decentralized gateway to the Ton21 ecosystem.",
-        btn1: "💰 Buy $T21",
-        btn2: "🔁 Swap Tokens",
-        btn3: "💎 Wallet Balance",
-        btn4: "🪙 Buy Assistant",
-        btn5: "🌐 Ton21 Portal"
-      }
+    // If CORS упрётся, укажи адрес своего лёгкого прокси (оставь "" для прямых запросов):
+    // пример proxy: https://your-render-app.onrender.com/toncenter?path=...&params=...
+    const proxyUrl = ""; // либо "" для прямых запросов
+
+    // ========= I18N =========
+    const T = {
+      en:{title:"✨ Welcome to Ton21 Wallet ✨", desc:"💎 Your decentralized gateway to the Ton21 ecosystem.",
+        hint:"Paste your Tonkeeper address (starts with UQ or EQ)",
+        saved:"✅ Address saved", invalid:"⚠️ Invalid address", errFetch:"⚠️ Error: ", okUpdated:"✅ Updated",
+        b1:"💰 Buy $T21", b2:"🔁 Swap Tokens", b4:"🪙 Buy Assistant", b5:"🌐 Ton21 Portal"},
+      ru:{title:"✨ Добро пожаловать в Ton21 Кошелёк ✨", desc:"💎 Твой децентрализованный портал в экосистему Ton21.",
+        hint:"Вставь Tonkeeper-адрес (начинается с UQ или EQ)",
+        saved:"✅ Адрес сохранён", invalid:"⚠️ Некорректный адрес", errFetch:"⚠️ Ошибка: ", okUpdated:"✅ Обновлено",
+        b1:"💰 Купить $T21", b2:"🔁 Обмен / Swap", b4:"🪙 Помощник покупки", b5:"🌐 Портал Ton21"},
+      zh:{title:"✨ 欢迎来到 Ton21 钱包 ✨", desc:"💎 进入 Ton21 生态系统的去中心化门户。",
+        hint:"粘贴 Tonkeeper 地址（以 UQ 或 EQ 开头）",
+        saved:"✅ 地址已保存", invalid:"⚠️ 地址无效", errFetch:"⚠️ 错误：", okUpdated:"✅ 已更新",
+        b1:"💰 购买 $T21", b2:"🔁 代币交换", b4:"🪙 购买助手", b5:"🌐 Ton21 门户"},
+      hi:{title:"✨ Ton21 वॉलेट में आपका स्वागत है ✨", desc:"💎 Ton21 पारिस्थितिकी तंत्र का आपका विकेंद्रीकृत प्रवेश द्वार।",
+        hint:"Tonkeeper पता पेस्ट करें (UQ या EQ से शुरू होता है)",
+        saved:"✅ पता सहेजा गया", invalid:"⚠️ अमान्य पता", errFetch:"⚠️ त्रुटि: ", okUpdated:"✅ अपडेट किया गया",
+        b1:"💰 $T21 खरीदें", b2:"🔁 टोकन स्वैप करें", b4:"🪙 खरीद सहायक", b5:"🌐 Ton21 पोर्टल"}
     };
 
-    function setLang(lang) {
-      const t = translations[lang];
-      document.querySelector("h1").innerText = t.title;
-      document.querySelector("p").innerText = t.desc;
-      const btns = document.querySelectorAll(".btn");
-      btns[0].innerText = t.btn1;
-      btns[1].innerText = t.btn2;
-      btns[2].innerText = t.btn3;
-      btns[3].innerText = t.btn4;
-      btns[4].innerText = t.btn5;
+    function setLang(lang){
+      const t=T[lang]||T.en;
+      document.getElementById("t_title").innerText=t.title;
+      document.getElementById("t_desc").innerText=t.desc;
+      document.getElementById("hint").innerText=t.hint;
+      document.getElementById("b1").innerText=t.b1;
+      document.getElementById("b2").innerText=t.b2;
+      document.getElementById("b4").innerText=t.b4;
+      document.getElementById("b5").innerText=t.b5;
+      localStorage.setItem("t21_lang",lang);
     }
+
+    // ========= Helpers =========
+    function openLink(url){
+      if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.openLink(url);} else {window.open(url,"_blank");}
+    }
+    const $ = id => document.getElementById(id);
+    function validAddr(a){ return (a||"").trim().match(/^(UQ|EQ)[A-Za-z0-9\-_]{30,}$/); }
+
+    async function tcGet(path, params={}){
+      const p = new URLSearchParams({...params, api_key: TONCENTER_KEY}).toString();
+      if(proxyUrl){
+        // через прокси
+        const u = `${proxyUrl}&path=${encodeURIComponent(path)}&${p}`;
+        const r = await fetch(u);
+        return r.json();
+      }else{
+        // прямой вызов
+        const u = `${TONCENTER_URL}${path}?${p}`;
+        const r = await fetch(u);
+        return r.json();
+      }
+    }
+
+    async function getTonBalance(address){
+      const j = await tcGet("getAddressBalance",{address});
+      if(!("result" in j)) throw new Error(j.error||"no result");
+      return Number(j.result)/1e9;
+    }
+
+    async function getT21Balance(address){
+      // спрашиваем jetton_wallet_info по master контракту T21
+      const j = await tcGet("get_jetton_wallet_info",{address, jetton_master:T21_MASTER});
+      const res = j.result || {};
+      if("balance" in res){ return Number(res.balance)/1e9; }
+      return 0.0; // если кошелёк jetton не развёрнут
+    }
+
+    async function refresh(){
+      const addr = $("addr").value.trim();
+      const msg = $("msg");
+      msg.className = ""; msg.textContent = "";
+      if(!validAddr(addr)){ msg.className="err"; msg.textContent=T[currentLang].invalid; return; }
+
+      $("ton_val").textContent = "…";
+      $("t21_val").textContent = "…";
+
+      try{
+        const [ton,t21] = await Promise.all([getTonBalance(addr), getT21Balance(addr)]);
+        $("ton_val").textContent = ton.toFixed(4);
+        $("t21_val").textContent = t21.toFixed(2);
+        msg.className="ok"; msg.textContent=T[currentLang].okUpdated;
+        localStorage.setItem("t21_addr", addr);
+      }catch(e){
+        $("ton_val").textContent = "—";
+        $("t21_val").textContent = "—";
+        msg.className="err"; msg.textContent = T[currentLang].errFetch + (e.message||e);
+      }
+    }
+
+    // ========= Init =========
+    let currentLang = localStorage.getItem("t21_lang") || (navigator.language||"en").slice(0,2);
+    if(!T[currentLang]) currentLang="en";
+    setLang(currentLang);
+
+    const saved = localStorage.getItem("t21_addr");
+    if(saved){ $("addr").value = saved; }
+
+    $("btn_save").onclick = ()=>{
+      const v = $("addr").value.trim();
+      if(!validAddr(v)){ $("msg").className="err"; $("msg").textContent=T[currentLang].invalid; return; }
+      localStorage.setItem("t21_addr", v);
+      $("msg").className="ok"; $("msg").textContent=T[currentLang].saved;
+    };
+    $("btn_refresh").onclick = refresh;
+
+    // Авто-обновление при наличии адреса
+    if(saved){ refresh(); }
   </script>
 </body>
 </html>
