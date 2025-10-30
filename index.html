@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ton21 Wallet — Buy Assistant</title>
+  <style>
+    /* --------------------------
+       Base Styles
+    -------------------------- */
+    body {
+      background: radial-gradient(circle at top, #0b0b0f, #000);
+      color: #f0d173;
+      font-family: "Segoe UI", Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 40px 10px 15px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    header img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid #f0d173;
+      box-shadow: 0 0 25px rgba(240, 209, 115, 0.4);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 15px;
+      text-shadow: 0 0 10px #f0d173aa;
+      animation: slideIn 1.2s ease-out;
+    }
+
+    p {
+      color: #d3d3d3;
+      font-size: 15px;
+      margin: 10px 25px 25px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    /* --------------------------
+       Buttons
+    -------------------------- */
+    .btn {
+      display: block;
+      margin: 12px auto;
+      width: 80%;
+      max-width: 320px;
+      background: linear-gradient(90deg, #f0d173, #ffe794);
+      color: #0b0b0f;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 15px rgba(240, 209, 115, 0.2);
+    }
+
+    .btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 25px rgba(240, 209, 115, 0.6);
+    }
+
+    /* --------------------------
+       Language Buttons
+    -------------------------- */
+    .lang {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .lang button {
+      background: none;
+      border: 1px solid #f0d173;
+      color: #f0d173;
+      margin: 5px;
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .lang button:hover {
+      background: #f0d173;
+      color: #000;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #666;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    /* --------------------------
+       Animations
+    -------------------------- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(240, 209, 115, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(240, 209, 115, 0.8); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://raw.githubusercontent.com/ton21-official/ton21-logo/main/t21_logo_gold.png" alt="Ton21 Logo" />
+    <h1 id="title">✨ Welcome to Ton21 Wallet ✨</h1>
+    <p id="desc">💎 Your decentralized gateway to the Ton21 ecosystem.</p>
+  </header>
+
+  <main>
+    <button class="btn" id="btn1" onclick="openLink('https://dedust.io/swap/TON/T21')">💰 Buy $T21</button>
+    <button class="btn" id="btn2" onclick="openLink('https://dedust.io/swap/T21/TON')">🔁 Swap Tokens</button>
+    <button class="btn" id="btn3" onclick="openLink('https://t.me/T21WalletBot')">💎 Wallet Balance</button>
+    <button class="btn" id="btn4" onclick="openLink('https://t.me/T21BuyBot')">🪙 T21 Buy Assistant</button>
+    <button class="btn" id="btn5" onclick="openLink('https://ton21project.com')">🌐 Ton21 Project</button>
+  </main>
+
+  <div class="lang">
+    🌐 Language:
+    <button onclick="setLang('ru')">🇷🇺</button>
+    <button onclick="setLang('en')">🇬🇧</button>
+    <button onclick="setLang('zh')">🇨🇳</button>
+    <button onclick="setLang('hi')">🇮🇳</button>
+  </div>
+
+  <footer>
+    © 2025 Ton21 Project — All rights reserved
+  </footer>
+
+  <script>
+    // open links inside Telegram Mini App
+    function openLink(url) {
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.openLink(url);
+      } else {
+        window.open(url, "_blank");
+      }
+    }
+
+    // Translations
+    const translations = {
+      ru: {
+        title: "✨ Добро пожаловать в Ton21 Кошелёк ✨",
+        desc: "💎 Твой децентрализованный портал в экосистему Ton21.",
+        btn1: "💰 Купить $T21",
+        btn2: "🔁 Обмен / Swap",
+        btn3: "💎 Баланс кошелька",
+        btn4: "🪙 Помощник покупки",
+        btn5: "🌐 Проект Ton21"
+      },
+      zh: {
+        title: "✨ 欢迎来到 Ton21 钱包 ✨",
+        desc: "💎 进入 Ton21 生态系统的去中心化门户。",
+        btn1: "💰 购买 $T21",
+        btn2: "🔁 代币交换",
+        btn3: "💎 钱包余额",
+        btn4: "🪙 购买助手",
+        btn5: "🌐 Ton21 项目"
+      },
+      hi: {
+        title: "✨ Ton21 वॉलेट में आपका स्वागत है ✨",
+        desc: "💎 Ton21 पारिस्थितिकी तंत्र का आपका विकेंद्रीकृत प्रवेश द्वार।",
+        btn1: "💰 $T21 खरीदें",
+        btn2: "🔁 टोकन स्वैप करें",
+        btn3: "💎 वॉलेट बैलेंस",
+        btn4: "🪙 खरीद सहायक",
+        btn5: "🌐 Ton21 प्रोजेक्ट"
+      },
+      en: {
+        title: "✨ Welcome to Ton21 Wallet ✨",
+        desc: "💎 Your decentralized gateway to the Ton21 ecosystem.",
+        btn1: "💰 Buy $T21",
+        btn2: "🔁 Swap Tokens",
+        btn3: "💎 Wallet Balance",
+        btn4: "🪙 Buy Assistant",
+        btn5: "🌐 Ton21 Project"
+      }
+    };
+
+    // Switch language
+    function setLang(lang) {
+      const t = translations[lang];
+      document.getElementById("title").innerText = t.title;
+      document.getElementById("desc").innerText = t.desc;
+      document.getElementById("btn1").innerText = t.btn1;
+      document.getElementById("btn2").innerText = t.btn2;
+      document.getElementById("btn3").innerText = t.btn3;
+      document.getElementById("btn4").innerText = t.btn4;
+      document.getElementById("btn5").innerText = t.btn5;
+    }
+  </script>
+</body>
+</html>
